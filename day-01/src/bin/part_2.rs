@@ -10,15 +10,19 @@ fn solve(input: &str) -> i32 {
         }
     }
 
-    let largest: i32 = elves.into_iter()
-        .map(|elf|
-            elf.into_iter()
+    let mut sums: Vec<i32> = elves.into_iter()
+        .map(|e|
+            e.into_iter()
             .map(|s| s.parse::<i32>().unwrap())
             .sum::<i32>()
         )
-        .max().unwrap();
+        .collect();
+    sums.sort();
+    sums.reverse();
 
-    largest
+    let top_3: i32 = sums.iter().take(3).sum();
+
+    top_3
 }
 
 fn main() {
@@ -51,7 +55,7 @@ mod tests {
 8000
 9000
 
-10000", 24000)
+10000", 45000)
         ];
         for (input, expected) in tests {
             assert_eq!(solve(input), expected);
