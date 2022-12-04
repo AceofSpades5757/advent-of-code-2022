@@ -2,12 +2,7 @@
 fn solve(input: &str) -> i32 {
     input
         .split("\n\n")
-        .map(|workload|
-            workload
-            .lines()
-            .map(|s| s.parse::<i32>().unwrap())
-            .sum()
-        )
+        .map(|workload| workload.lines().map(|s| s.parse::<i32>().unwrap()).sum())
         .max()
         .unwrap()
 }
