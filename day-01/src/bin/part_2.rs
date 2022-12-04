@@ -10,12 +10,13 @@ fn solve(input: &str) -> i32 {
         }
     }
 
-    let mut sums: Vec<i32> = elves.into_iter()
-        .map(|e|
+    let mut sums: Vec<i32> = elves
+        .into_iter()
+        .map(|e| {
             e.into_iter()
-            .map(|s| s.parse::<i32>().unwrap())
-            .sum::<i32>()
-        )
+                .map(|s| s.parse::<i32>().unwrap())
+                .sum::<i32>()
+        })
         .collect();
     sums.sort();
     sums.reverse();
@@ -39,8 +40,8 @@ mod tests {
 
     #[test]
     fn test_compute() {
-        let tests = vec![
-            ("1000
+        let tests = vec![(
+            "1000
 2000
 3000
 
@@ -53,8 +54,9 @@ mod tests {
 8000
 9000
 
-10000", 45000)
-        ];
+10000",
+            45000,
+        )];
         for (input, expected) in tests {
             assert_eq!(solve(input), expected);
         }

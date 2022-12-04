@@ -4,7 +4,6 @@ fn solve(input: &str) -> i32 {
 
     let mut sum = 0;
     for rucksack in lines.into_iter() {
-
         let first_compartment = rucksack[0..rucksack.len() / 2].to_owned();
         let second_compartment = rucksack[rucksack.len() / 2..].to_owned();
 
@@ -81,7 +80,6 @@ fn letter_to_number(letter: char) -> i32 {
     }
 }
 
-
 fn main() {
     let input = include_str!("../../input.txt");
     let answer = solve(&input);
@@ -96,14 +94,15 @@ mod tests {
 
     #[test]
     fn test_compute() {
-        let tests = vec![
-            ("vJrwpWtwJgWrhcsFMMfFFhFp
+        let tests = vec![(
+            "vJrwpWtwJgWrhcsFMMfFFhFp
 jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL
 PmmdzqPrVvPwwTWBwg
 wMqvLMZHhHMvwLHjbvcjnnSBnvTQFn
 ttgJtRGJQctTZtZT
-CrZsJsPPZsGzwwsLwLmpwMDw", 157)
-        ];
+CrZsJsPPZsGzwwsLwLmpwMDw",
+            157,
+        )];
         for (input, expected) in tests {
             assert_eq!(solve(input), expected);
         }

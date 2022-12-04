@@ -4,7 +4,13 @@ fn solve(input: &str) -> i32 {
 
     let groups: Vec<[String; 3]> = lines
         .chunks(3)
-        .map(|chunk| [chunk[0].to_owned(), chunk[1].to_owned(), chunk[2].to_owned()])
+        .map(|chunk| {
+            [
+                chunk[0].to_owned(),
+                chunk[1].to_owned(),
+                chunk[2].to_owned(),
+            ]
+        })
         .collect();
 
     let mut sum = 0;
@@ -82,7 +88,6 @@ fn letter_to_number(letter: char) -> i32 {
     }
 }
 
-
 fn main() {
     let input = include_str!("../../input.txt");
     let answer = solve(&input);
@@ -97,14 +102,15 @@ mod tests {
 
     #[test]
     fn test_compute() {
-        let tests = vec![
-            ("vJrwpWtwJgWrhcsFMMfFFhFp
+        let tests = vec![(
+            "vJrwpWtwJgWrhcsFMMfFFhFp
 jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL
 PmmdzqPrVvPwwTWBwg
 wMqvLMZHhHMvwLHjbvcjnnSBnvTQFn
 ttgJtRGJQctTZtZT
-CrZsJsPPZsGzwwsLwLmpwMDw", 70)
-        ];
+CrZsJsPPZsGzwwsLwLmpwMDw",
+            70,
+        )];
         for (input, expected) in tests {
             assert_eq!(solve(input), expected);
         }

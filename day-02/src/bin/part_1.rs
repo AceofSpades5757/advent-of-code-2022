@@ -97,11 +97,12 @@ mod tests {
 
     #[test]
     fn test_compute() {
-        let tests = vec![
-            ("A Y
+        let tests = vec![(
+            "A Y
 B X
-C Z", 8 + 1 + 6)
-        ];
+C Z",
+            8 + 1 + 6,
+        )];
         for (input, expected) in tests {
             assert_eq!(solve(input), expected);
         }

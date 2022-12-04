@@ -10,13 +10,15 @@ fn solve(input: &str) -> i32 {
         }
     }
 
-    let largest: i32 = elves.into_iter()
-        .map(|elf|
+    let largest: i32 = elves
+        .into_iter()
+        .map(|elf| {
             elf.into_iter()
-            .map(|s| s.parse::<i32>().unwrap())
-            .sum::<i32>()
-        )
-        .max().unwrap();
+                .map(|s| s.parse::<i32>().unwrap())
+                .sum::<i32>()
+        })
+        .max()
+        .unwrap();
 
     largest
 }
@@ -35,8 +37,8 @@ mod tests {
 
     #[test]
     fn test_compute() {
-        let tests = vec![
-            ("1000
+        let tests = vec![(
+            "1000
 2000
 3000
 
@@ -49,8 +51,9 @@ mod tests {
 8000
 9000
 
-10000", 24000)
-        ];
+10000",
+            24000,
+        )];
         for (input, expected) in tests {
             assert_eq!(solve(input), expected);
         }
