@@ -1,26 +1,15 @@
 /// Solve the Puzzle
 fn solve(input: &str) -> i32 {
-    let lines: Vec<String> = input.lines().map(|s| s.to_owned()).collect();
-    let mut elves: Vec<Vec<String>> = vec![vec![]];
-    for line in lines.into_iter() {
-        if line.is_empty() {
-            elves.push(vec![]);
-        } else {
-            elves.last_mut().unwrap().push(line);
-        }
-    }
-
-    let largest: i32 = elves
-        .into_iter()
-        .map(|elf| {
-            elf.into_iter()
-                .map(|s| s.parse::<i32>().unwrap())
-                .sum::<i32>()
-        })
+    input
+        .split("\n\n")
+        .map(|workload|
+            workload
+            .lines()
+            .map(|s| s.parse::<i32>().unwrap())
+            .sum()
+        )
         .max()
-        .unwrap();
-
-    largest
+        .unwrap()
 }
 
 fn main() {
