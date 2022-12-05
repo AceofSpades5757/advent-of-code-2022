@@ -1,29 +1,13 @@
 /// Solve the Puzzle
 fn solve(input: &str) -> i32 {
-    let lines: Vec<String> = input.lines().map(|s| s.to_owned()).collect();
-    let mut elves: Vec<Vec<String>> = vec![vec![]];
-    for line in lines.into_iter() {
-        if line.is_empty() {
-            elves.push(vec![]);
-        } else {
-            elves.last_mut().unwrap().push(line);
-        }
-    }
-
-    let mut sums: Vec<i32> = elves
-        .into_iter()
-        .map(|e| {
-            e.into_iter()
-                .map(|s| s.parse::<i32>().unwrap())
-                .sum::<i32>()
-        })
+    let mut sums: Vec<i32> = input
+        .split("\n\n")
+        .map(|workload| workload.lines().map(|s| s.parse::<i32>().unwrap()).sum())
         .collect();
     sums.sort();
     sums.reverse();
 
-    let top_3: i32 = sums.iter().take(3).sum();
-
-    top_3
+    sums.iter().take(3).sum()
 }
 
 fn main() {
