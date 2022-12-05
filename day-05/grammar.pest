@@ -1,0 +1,6 @@
+value = { ASCII_DIGIT+ }
+move_ = { "move " ~ value }
+from = { "from " ~ value }
+to = { "to " ~ value }
+movement = { move_ ~ " " ~ from ~ " " ~ to }
+movements = { SOI ~ (movement ~ NEWLINE?)* ~ EOI }
