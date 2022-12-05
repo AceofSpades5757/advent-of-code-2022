@@ -37,17 +37,20 @@ fn solve(input: &str) -> String {
         }
 
         let mut level = 1;
-        line.chars().collect::<Vec<char>>().chunks(4).for_each(|chunk| {
-            let string = chunk.iter().take(3).collect::<String>();
+        line.chars()
+            .collect::<Vec<char>>()
+            .chunks(4)
+            .for_each(|chunk| {
+                let string = chunk.iter().take(3).collect::<String>();
 
-            if string == "   " {
-                // ...
-            } else {
-                let char = chunk[1];
-                stacks[level - 1].push(char);
-            }
-            level += 1;
-        });
+                if string == "   " {
+                    // ...
+                } else {
+                    let char = chunk[1];
+                    stacks[level - 1].push(char);
+                }
+                level += 1;
+            });
     }
 
     // reverse stacks
@@ -57,29 +60,54 @@ fn solve(input: &str) -> String {
     reader.next();
 
     // movements
-    let string = reader.collect::<Vec<&String>>().into_iter().map(|s| s.to_owned()).collect::<Vec<String>>().join("\n");
-    let movements = GrammarParser::parse(
-        Rule::movements,
-        &string,
-    )
-    .expect("successful parse")
-    .next().unwrap();
+    let string = reader
+        .collect::<Vec<&String>>()
+        .into_iter()
+        .map(|s| s.to_owned())
+        .collect::<Vec<String>>()
+        .join("\n");
+    let movements = GrammarParser::parse(Rule::movements, &string)
+        .expect("successful parse")
+        .next()
+        .unwrap();
 
     let mut moves: Vec<Move> = Vec::new();
     for movement in movements.into_inner() {
         match movement.as_rule() {
             Rule::movement => {
-                let mut move_ = Move { count: 0, from: 0, to: 0 };
+                let mut move_ = Move {
+                    count: 0,
+                    from: 0,
+                    to: 0,
+                };
                 for i in movement.into_inner() {
                     match i.as_rule() {
                         Rule::move_ => {
-                            move_.count = i.into_inner().next().unwrap().as_str().parse::<i32>().unwrap();
+                            move_.count = i
+                                .into_inner()
+                                .next()
+                                .unwrap()
+                                .as_str()
+                                .parse::<i32>()
+                                .unwrap();
                         }
                         Rule::from => {
-                            move_.from = i.into_inner().next().unwrap().as_str().parse::<usize>().unwrap();
+                            move_.from = i
+                                .into_inner()
+                                .next()
+                                .unwrap()
+                                .as_str()
+                                .parse::<usize>()
+                                .unwrap();
                         }
                         Rule::to => {
-                            move_.to = i.into_inner().next().unwrap().as_str().parse::<usize>().unwrap();
+                            move_.to = i
+                                .into_inner()
+                                .next()
+                                .unwrap()
+                                .as_str()
+                                .parse::<usize>()
+                                .unwrap();
                         }
                         _ => unreachable!(),
                     }
@@ -131,9 +159,8 @@ mod tests {
 
     #[test]
     fn test_compute() {
-        let tests = vec![
-            (
-"    [D]
+        let tests = vec![(
+            "    [D]
 [N] [C]
 [Z] [M] [P]
  1   2   3
@@ -141,8 +168,9 @@ mod tests {
 move 1 from 2 to 1
 move 3 from 1 to 3
 move 2 from 2 to 1
-move 1 from 1 to 2", "MCD")
-        ];
+move 1 from 1 to 2",
+            "MCD",
+        )];
         for (input, expected) in tests {
             assert_eq!(solve(input), expected);
         }
