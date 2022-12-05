@@ -98,7 +98,7 @@ fn solve(input: &str) -> String {
         let count = move_.count;
 
         let mut boxes = Vec::new();
-        for _ in 0..move_.count {
+        for _ in 0..count {
             let char = stacks[from].pop().unwrap();
             boxes.push(char);
         }

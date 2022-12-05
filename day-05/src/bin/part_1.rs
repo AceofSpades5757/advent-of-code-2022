@@ -96,7 +96,7 @@ fn solve(input: &str) -> String {
         let from: usize = move_.from - 1;
         let to: usize = move_.to - 1;
         let count = move_.count;
-        for _ in 0..move_.count {
+        for _ in 0..count {
             let char = stacks[from].pop().unwrap();
             stacks[to].push(char);
         }
