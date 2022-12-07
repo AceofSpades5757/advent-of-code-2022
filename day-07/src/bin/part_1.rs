@@ -30,7 +30,7 @@ fn solve(input: &str) -> i32 {
         } else {
             // Directory: dir <path>
             if line.starts_with("dir ") {
-                let path = line[4..].parse::<PathBuf>().unwrap();
+                // ...
             // File: <size> <file>
             } else {
                 let mut file = line.parse::<File>().unwrap();
@@ -63,7 +63,7 @@ fn solve(input: &str) -> i32 {
     }
 
     let mut total = 0;
-    for (dir, size) in dirs.iter() {
+    for (_dir, size) in dirs.iter() {
         if *size <= 100000 {
             total += size;
         }
