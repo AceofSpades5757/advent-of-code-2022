@@ -1,6 +1,5 @@
 use std::collections::HashMap;
 use std::path::PathBuf;
-use std::str::FromStr;
 
 const FILESYSTEM_SIZE: usize = 70_000_000;
 const MINIMUM_SYSTEM_SIZE: usize = 30_000_000;

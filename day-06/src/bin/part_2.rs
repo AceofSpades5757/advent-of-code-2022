@@ -1,8 +1,9 @@
 use std::collections::HashSet;
 
+const MARKER_SIZE: usize = 14;
+
 /// Solve the Puzzle
 fn solve(input: &str) -> i32 {
-    let MARKER_SIZE = 14;
     let chars = input.chars();
     let mut stack = Vec::with_capacity(MARKER_SIZE);
     for (index, chr) in chars.enumerate() {
