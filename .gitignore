@@ -1,2 +1,4 @@
 # Local Environment Variables
 .env
+
+Cargo.lock
