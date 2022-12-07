@@ -101,52 +101,19 @@ impl Environment {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, parse_display::FromStr)]
+#[display("{size} {path}")]
 struct File {
     size: u32,
     path: PathBuf,
 }
 
-impl FromStr for File {
-    type Err = ();
-
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        let splitter = s.splitn(2, ' ').collect::<Vec<&str>>();
-        let size: u32 = splitter[0].parse().unwrap();
-        let path = splitter[1].parse::<PathBuf>().unwrap();
-        Ok(Self { size, path })
-    }
-}
-
-#[derive(Debug)]
+#[derive(Debug, parse_display::FromStr)]
 pub enum Command {
+    #[display("cd {0}")]
     Cd(PathBuf),
+    #[display("ls")]
     Ls,
-}
-
-impl FromStr for Command {
-    type Err = String;
-
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        let mut parts = s.split_whitespace();
-        let command = parts.next().ok_or("No command")?;
-        let args = parts.collect::<Vec<_>>();
-        match command {
-            "cd" => {
-                if args.len() != 1 {
-                    return Err("cd takes one argument".to_owned());
-                }
-                Ok(Command::Cd(PathBuf::from(args[0])))
-            }
-            "ls" => {
-                if !args.is_empty() {
-                    return Err("ls takes no arguments".to_owned());
-                }
-                Ok(Command::Ls)
-            }
-            _ => Err(format!("Unknown command: {}", command)),
-        }
-    }
 }
 
 fn main() {
