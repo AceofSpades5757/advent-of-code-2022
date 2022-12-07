@@ -160,7 +160,7 @@ mod tests {
     #[test]
     fn test_compute() {
         let tests = vec![(
-"    [D]    
+            "    [D]    
 [N] [C]    
 [Z] [M] [P]
  1   2   3 

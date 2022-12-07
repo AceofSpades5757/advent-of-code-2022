@@ -1,6 +1,6 @@
-use std::str::FromStr;
-use std::path::PathBuf;
 use std::collections::HashMap;
+use std::path::PathBuf;
+use std::str::FromStr;
 
 const FILESYSTEM_SIZE: usize = 70_000_000;
 const MINIMUM_SYSTEM_SIZE: usize = 30_000_000;
@@ -27,14 +27,14 @@ fn solve(input: &str) -> i32 {
                         environ.cwd.push(path);
                     }
                 }
-                Command::Ls => {},
+                Command::Ls => {}
             }
         // ls Ouput
         } else {
             // Directory: dir <path>
             if line.starts_with("dir ") {
                 // ...
-            // File: <size> <file>
+                // File: <size> <file>
             } else {
                 let mut file = line.parse::<File>().unwrap();
                 file.path = environ.cwd.join(&file.path);
@@ -163,8 +163,8 @@ mod tests {
 
     #[test]
     fn test_compute() {
-        let tests = vec![
-            ("$ cd /
+        let tests = vec![(
+            "$ cd /
 $ ls
 dir a
 14848514 b.txt
@@ -186,8 +186,9 @@ $ ls
 4060174 j
 8033020 d.log
 5626152 d.ext
-7214296 k", 24933642)
-        ];
+7214296 k",
+            24933642,
+        )];
         for (input, expected) in tests {
             assert_eq!(solve(input), expected);
         }

@@ -1,6 +1,6 @@
-use std::str::FromStr;
-use std::path::PathBuf;
 use std::collections::HashMap;
+use std::path::PathBuf;
+use std::str::FromStr;
 
 /// Solve the Puzzle
 fn solve(input: &str) -> i32 {
@@ -24,14 +24,14 @@ fn solve(input: &str) -> i32 {
                         environ.cwd.push(path);
                     }
                 }
-                Command::Ls => {},
+                Command::Ls => {}
             }
         // ls Ouput
         } else {
             // Directory: dir <path>
             if line.starts_with("dir ") {
                 // ...
-            // File: <size> <file>
+                // File: <size> <file>
             } else {
                 let mut file = line.parse::<File>().unwrap();
                 file.path = environ.cwd.join(&file.path);
@@ -147,8 +147,8 @@ mod tests {
 
     #[test]
     fn test_compute() {
-        let tests = vec![
-            ("$ cd /
+        let tests = vec![(
+            "$ cd /
 $ ls
 dir a
 14848514 b.txt
@@ -170,8 +170,9 @@ $ ls
 4060174 j
 8033020 d.log
 5626152 d.ext
-7214296 k", 95437)
-        ];
+7214296 k",
+            95437,
+        )];
         for (input, expected) in tests {
             assert_eq!(solve(input), expected);
         }
