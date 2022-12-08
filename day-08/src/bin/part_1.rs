@@ -95,13 +95,14 @@ mod tests {
 
     #[test]
     fn test_compute() {
-        let tests = vec![
-            ("30373
+        let tests = vec![(
+            "30373
 25512
 65332
 33549
-35390", 21)
-        ];
+35390",
+            21,
+        )];
         for (input, expected) in tests {
             assert_eq!(solve(input), expected);
         }

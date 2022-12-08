@@ -17,7 +17,6 @@ fn solve(input: &str) -> i32 {
     let mut best_score: i32 = 0;
     for y in 1..(forest.len() - 1) {
         for x in 1..(forest.len() - 1) {
-
             let tree = forest[y][x];
 
             let up;
@@ -96,13 +95,14 @@ mod tests {
 
     #[test]
     fn test_compute() {
-        let tests = vec![
-            ("30373
+        let tests = vec![(
+            "30373
 25512
 65332
 33549
-35390", 8)
-        ];
+35390",
+            8,
+        )];
         for (input, expected) in tests {
             assert_eq!(solve(input), expected);
         }
