@@ -1,43 +1,49 @@
+use std::cell::RefCell;
 use std::collections::HashSet;
+use std::fmt;
+use std::rc::Rc;
 
 use parse_display::{Display, FromStr};
 
-/// Solve the Puzzle
-fn solve(input: &str) -> i32 {
-    let mut rope = Rope::new();
-
-    for line in input.lines() {
-        let movement = line.parse::<Movement>().unwrap();
-        for _ in 0..(movement.distance()) {
-            rope.move_head(&movement);
-        }
-    }
-
-    rope.tail_history.len() as i32
-}
-
-/// Rope with head and tail at x,y coordinates
-#[derive(Debug)]
-struct Rope {
+/// Rope knot with head and optional tail at x,y coordinates
+#[derive(Debug, Clone)]
+struct Knot {
     head: (i32, i32),
-    tail: (i32, i32),
-    tail_history: HashSet<(i32, i32)>,
+    tail: Rc<RefCell<Option<Knot>>>,
+    history: HashSet<(i32, i32)>,
 }
 
-impl Rope {
+impl Knot {
     fn new() -> Self {
-        let mut tail_history = HashSet::new();
-        tail_history.insert((0, 0));
+        let mut history = HashSet::new();
+        history.insert((0, 0));
         Self {
             head: (0, 0),
-            tail: (0, 0),
-            tail_history,
+            tail: Rc::new(RefCell::new(None)),
+            history,
+        }
+    }
+    fn add_tail(&mut self) {
+        let mut last_tail = self.tail.borrow_mut();
+        if last_tail.is_none() {
+            *last_tail = Some(Knot::new());
+        } else {
+            last_tail.as_mut().unwrap().add_tail();
+        }
+    }
+}
+
+impl Knot {
+    fn last(&self) -> Knot {
+        match self.tail.borrow().as_ref() {
+            Some(knot) => knot.last(),
+            None => self.clone(),
         }
     }
 }
 
 /// Movement
-impl Rope {
+impl Knot {
     /// Move the rope
     fn move_head(&mut self, movement: &Movement) {
         use Movement::*;
@@ -45,71 +51,81 @@ impl Rope {
         match movement {
             Up(_) => {
                 self.head.0 += 1;
+                self.history.insert(self.head);
                 self.move_tail();
-                self.tail_history.insert(self.tail);
             }
             Down(_) => {
                 self.head.0 -= 1;
+                self.history.insert(self.head);
                 self.move_tail();
-                self.tail_history.insert(self.tail);
             }
             Right(_) => {
                 self.head.1 += 1;
+                self.history.insert(self.head);
                 self.move_tail();
-                self.tail_history.insert(self.tail);
             }
             Left(_) => {
                 self.head.1 -= 1;
+                self.history.insert(self.head);
                 self.move_tail();
-                self.tail_history.insert(self.tail);
             }
         }
     }
     /// Move the tail, which follows the head
     fn move_tail(&mut self) {
-        // If 1 space away, even diagonally, do nothing
-        if (self.head.0 - self.tail.0).abs() <= 1 && (self.head.1 - self.tail.1).abs() <= 1 {
+        if !self.tail.borrow().is_some() {
             return;
         }
 
-        // Diagonal
-        if self.tail.0 != self.head.0 && self.tail.1 != self.head.1 {
-            if self.tail.0 < self.head.0 {
-                self.tail.0 += 1;
-            } else {
-                self.tail.0 -= 1;
-            }
-            if self.tail.1 < self.head.1 {
-                self.tail.1 += 1;
-            } else {
-                self.tail.1 -= 1;
-            }
-        } else {
-            // Not Diagonal
-            if self.tail.0 == self.head.0 {
-                if self.tail.1 > self.head.1 {
-                    self.tail.1 -= 1;
-                } else {
-                    self.tail.1 += 1;
-                }
-            } else if self.tail.1 == self.head.1 {
-                if self.tail.0 > self.head.0 {
-                    self.tail.0 -= 1;
-                } else {
-                    self.tail.0 += 1;
-                }
-            }
+        let tail: &mut Option<Knot> = &mut *self.tail.borrow_mut();
+        if (self.head.0 - tail.clone().unwrap().head.0).abs() <= 1
+            && (self.head.1 - tail.clone().unwrap().head.1).abs() <= 1
+        {
+            return;
         }
+        if let Some(tail) = tail {
+            // Diagonal
+            if tail.head.0 != self.head.0 && tail.head.1 != self.head.1 {
+                if tail.head.0 < self.head.0 {
+                    tail.head.0 += 1;
+                } else {
+                    tail.head.0 -= 1;
+                }
+                if tail.head.1 < self.head.1 {
+                    tail.head.1 += 1;
+                } else {
+                    tail.head.1 -= 1;
+                }
+            } else {
+                // Not Diagonal
+                if tail.head.0 == self.head.0 {
+                    if tail.head.1 > self.head.1 {
+                        tail.head.1 -= 1;
+                    } else {
+                        tail.head.1 += 1;
+                    }
+                } else if tail.head.1 == self.head.1 {
+                    if tail.head.0 > self.head.0 {
+                        tail.head.0 -= 1;
+                    } else {
+                        tail.head.0 += 1;
+                    }
+                }
+            }
+            tail.history.insert(tail.head);
+            tail.move_tail();
+        }
+        //tail.as_mut().unwrap().move_tail();
     }
 }
 
-impl Rope {
-    /// Print tail history in x,y grid
-    fn print_tail_history(&self) {
-        // get max x and max y of hashset
+impl fmt::Display for Knot {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        let mut buffer = String::new();
+
         let mut max_x = 0;
         let mut max_y = 0;
-        for (x, y) in &self.tail_history {
+        for (x, y) in &self.history {
             if *x > max_x {
                 max_x = *x;
             }
@@ -123,25 +139,52 @@ impl Rope {
             max_x = max_y;
         }
 
-        println!(
-            "{} {}|{} {}",
-            self.head.0, self.head.1, self.tail.0, self.tail.1
-        );
         for x in (0..=max_x + 1).rev() {
             for y in 0..=max_y + 1 {
                 if self.head == (x, y) {
-                    print!("H");
-                } else if self.tail == (x, y) {
-                    print!("T");
-                } else if self.tail_history.contains(&(x, y)) {
-                    print!("#");
+                    buffer.push('H');
+                } else if self.tail.borrow().is_some()
+                    && self.tail.borrow().as_ref().unwrap().head == (x, y)
+                {
+                    buffer.push('T');
+                } else if self.history.contains(&(x, y)) {
+                    buffer.push('#');
                 } else {
-                    print!(".");
+                    buffer.push('.');
                 }
             }
-            println!();
+            buffer.push('\n');
+        }
+
+        write!(f, "{}", buffer)
+    }
+}
+
+/// Solve the Puzzle
+fn solve(input: &str) -> i32 {
+    let knot_count: i32 = 2;
+
+    let mut rope = Knot::new();
+    for _ in 0..(knot_count - 1) {
+        rope.add_tail();
+    }
+
+    for line in input.lines() {
+        let movement = line.parse::<Movement>().unwrap();
+        for _ in 0..(movement.distance()) {
+            rope.move_head(&movement);
         }
     }
+
+    println!("{}", rope.last());
+
+    rope.last().history.len() as i32
+}
+
+fn main() {
+    let input = include_str!("../../input.txt");
+    let answer = solve(&input);
+    println!("{}", answer);
 }
 
 #[derive(Display, FromStr, Debug)]
@@ -168,17 +211,18 @@ impl Movement {
     }
 }
 
-fn main() {
-    let input = include_str!("../../input.txt");
-    let answer = solve(&input);
-    println!("{}", answer);
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
     #[allow(unused_imports)]
     use pretty_assertions::{assert_eq, assert_ne};
+
+    #[test]
+    fn simple_movement() {
+        let input = "R 4";
+        let answer = solve(&input);
+        assert_eq!(answer, 4);
+    }
 
     #[test]
     fn test_compute() {
