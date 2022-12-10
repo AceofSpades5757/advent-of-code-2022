@@ -34,8 +34,8 @@ mod tests {
 
     #[test]
     fn test_compute() {
-        let tests = vec![
-("addx 15
+        let tests = vec![(
+            "addx 15
 addx -11
 addx 6
 addx -3
@@ -180,13 +180,14 @@ addx -6
 addx -11
 noop
 noop
-noop", "##..##..##..##..##..##..##..##..##..##..
+noop",
+            "##..##..##..##..##..##..##..##..##..##..
 ###...###...###...###...###...###...###.
 ####....####....####....####....####....
 #####.....#####.....#####.....#####.....
 ######......######......######......####
-#######.......#######.......#######.....")
-        ];
+#######.......#######.......#######.....",
+        )];
         for (input, expected) in tests {
             assert_eq!(solve(input), expected);
         }
@@ -195,7 +196,6 @@ noop", "##..##..##..##..##..##..##..##..##..##..
 
 /// Solve the Puzzle
 fn solve(input: &str) -> String {
-
     let mut environ: Environment = Default::default();
     let mut level: usize = 0;
     let mut canvas: [[char; 40]; 6] = [[' '; 40]; 6];

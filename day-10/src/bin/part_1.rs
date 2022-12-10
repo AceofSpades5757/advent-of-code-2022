@@ -56,8 +56,8 @@ mod tests {
 
     #[test]
     fn test_compute() {
-        let tests = vec![
-("addx 15
+        let tests = vec![(
+            "addx 15
 addx -11
 addx 6
 addx -3
@@ -202,8 +202,9 @@ addx -6
 addx -11
 noop
 noop
-noop", 13140)
-        ];
+noop",
+            13140,
+        )];
         for (input, expected) in tests {
             assert_eq!(solve(input), expected);
         }
@@ -212,8 +213,7 @@ noop", 13140)
 
 /// Solve the Puzzle
 fn solve(input: &str) -> i32 {
-
-    let important_signals= [20, 60, 100, 140, 180, 220];
+    let important_signals = [20, 60, 100, 140, 180, 220];
 
     let mut environ: Environment = Default::default();
     let mut signals = vec![];
