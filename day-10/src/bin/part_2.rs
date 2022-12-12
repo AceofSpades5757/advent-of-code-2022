@@ -197,50 +197,43 @@ noop",
 /// Solve the Puzzle
 fn solve(input: &str) -> String {
     let mut environ: Environment = Default::default();
-    let mut level: usize = 0;
     let mut canvas: [[char; 40]; 6] = [[' '; 40]; 6];
-    println!("{} {}", environ.cycle, level);
     for line in input.lines() {
         let command = line.parse::<Command>().unwrap();
+        // 200 - 240
         match command {
             Command::Noop => {
                 let x_range = (environ.x - 1)..=(environ.x + 1);
-                level = (environ.cycle - 1) / 40;
+                let level = (environ.cycle - 1) / 40;
                 let col = environ.cycle % 40;
-                //canvas[level][col] = '#';
                 if x_range.contains(&(col as i32)) {
                     canvas[level][col] = '#';
                 } else {
                     canvas[level][col] = '.';
                 }
                 environ.cycle += 1;
-                //println!("{} {}", environ.cycle, level);
             }
             Command::Add(value) => {
                 let x_range = (environ.x - 1)..=(environ.x + 1);
-                level = (environ.cycle - 1) / 40;
+                let level = (environ.cycle - 1) / 40;
                 let col = environ.cycle % 40;
-                //canvas[level][col] = '#';
                 if x_range.contains(&(col as i32)) {
                     canvas[level][col] = '#';
                 } else {
                     canvas[level][col] = '.';
                 }
                 environ.cycle += 1;
-                //println!("{} {}", environ.cycle, level);
 
                 environ.x += value;
                 let x_range = (environ.x - 1)..=(environ.x + 1);
-                level = (environ.cycle - 1) / 40;
+                let level = (environ.cycle - 1) / 40;
                 let col = environ.cycle % 40;
-                //canvas[level][col] = '#';
                 if x_range.contains(&(col as i32)) {
                     canvas[level][col] = '#';
                 } else {
                     canvas[level][col] = '.';
                 }
                 environ.cycle += 1;
-                //println!("{} {}", environ.cycle, level);
             }
         }
     }
