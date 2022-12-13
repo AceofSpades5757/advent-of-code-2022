@@ -17,19 +17,9 @@ impl std::str::FromStr for Monkey {
     type Err = ();
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        let monkey = s
-            .lines()
-            .nth(0)
-            .unwrap()
-            .parse::<MonkeyIndex>()
-            .unwrap();
+        let monkey = s.lines().nth(0).unwrap().parse::<MonkeyIndex>().unwrap();
         let items = s.lines().nth(1).unwrap().parse::<Items>().unwrap();
-        let operation = s
-            .lines()
-            .nth(2)
-            .unwrap()
-            .parse::<Operation>()
-            .unwrap();
+        let operation = s.lines().nth(2).unwrap().parse::<Operation>().unwrap();
         let test = s.lines().nth(3).unwrap().trim().parse::<Test>().unwrap();
         let throw_true = s
             .lines()
@@ -77,8 +67,7 @@ enum Operator {
     Multiply,
 }
 
-#[derive(Display, FromStr, Debug)]
-#[derive(Clone)]
+#[derive(Display, FromStr, Debug, Clone)]
 enum Operand {
     #[display("old")]
     Old,
@@ -111,24 +100,32 @@ impl Operation {
     fn apply(&self, old: usize) -> usize {
         match self.operator {
             Operator::Add => match self.left {
-                Operand::Old => old + match self.right {
-                    Operand::Old => old,
-                    Operand::Number(n) => n,
-                },
-                Operand::Number(n) => n + match self.right {
-                    Operand::Old => old,
-                    Operand::Number(n) => n,
-                },
+                Operand::Old => {
+                    old + match self.right {
+                        Operand::Old => old,
+                        Operand::Number(n) => n,
+                    }
+                }
+                Operand::Number(n) => {
+                    n + match self.right {
+                        Operand::Old => old,
+                        Operand::Number(n) => n,
+                    }
+                }
             },
             Operator::Multiply => match self.left {
-                Operand::Old => old * match self.right {
-                    Operand::Old => old,
-                    Operand::Number(n) => n,
-                },
-                Operand::Number(n) => n * match self.right {
-                    Operand::Old => old,
-                    Operand::Number(n) => n,
-                },
+                Operand::Old => {
+                    old * match self.right {
+                        Operand::Old => old,
+                        Operand::Number(n) => n,
+                    }
+                }
+                Operand::Number(n) => {
+                    n * match self.right {
+                        Operand::Old => old,
+                        Operand::Number(n) => n,
+                    }
+                }
             },
         }
     }
@@ -172,7 +169,6 @@ impl std::str::FromStr for Items {
 
 /// Solve the Puzzle
 fn solve(input: &str) -> i32 {
-
     // Config
     let number_of_rounds = 20;
 
@@ -212,11 +208,15 @@ fn solve(input: &str) -> i32 {
                             println!("Error: Monkey {} not found", monkey.throw_true);
                             dbg!(monkey_map);
                             panic!();
-                        },
+                        }
                     }
                 } else {
                     // If false, throw to monkey
-                    monkey_map.get_mut(&monkey.throw_false).unwrap().items.push(new_value);
+                    monkey_map
+                        .get_mut(&monkey.throw_false)
+                        .unwrap()
+                        .items
+                        .push(new_value);
                 }
             }
             // Remove items from this monkey
