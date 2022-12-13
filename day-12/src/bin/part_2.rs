@@ -57,7 +57,6 @@ impl Node {
 
 /// Solve the Puzzle
 fn solve(input: &str) -> i32 {
-    let mut start: (i32, i32, char) = (-1, -1, ' ');
     let mut end: (i32, i32, char) = (-1, -1, ' ');
     let mut board: Vec<Vec<Node>> = Vec::new();
     for _ in 0..input.lines().count() {
@@ -67,10 +66,7 @@ fn solve(input: &str) -> i32 {
     for (y, line) in input.lines().enumerate() {
         for (x, c) in line.chars().enumerate() {
             match c {
-                'S' => {
-                    start = (x as i32, y as i32, c);
-                    board[y].push(Node::Start);
-                }
+                'S' => board[y].push(Node::Start),
                 'E' => {
                     end = (x as i32, y as i32, c);
                     board[y].push(Node::End)
@@ -117,8 +113,27 @@ fn solve(input: &str) -> i32 {
 
     let graph = DiGraphMap::<_, ()>::from_edges(&edges);
 
-    let result = dijkstra(&graph, start, Some(end), |_| 1);
-    result[&end] as i32
+    // find all 'a' or 'S' in nodes
+    let mut start_nodes: Vec<(i32, i32, char)> = Vec::new();
+    for (y, row) in board.iter().enumerate() {
+        for (x, node) in row.iter().enumerate() {
+            if node.height() == 'a'.to_num() {
+                start_nodes.push((x as i32, y as i32, node.char()));
+            }
+        }
+    }
+
+    let mut results: Vec<i32> = Vec::new();
+    for start_node in start_nodes {
+
+        let res = dijkstra(&graph, start_node, Some(end), |_| 1);
+        if let Some(result) = res.get(&end) {
+            results.push(*result);
+        }
+
+    }
+
+    *results.iter().min().unwrap()
 }
 
 fn main() {
@@ -141,7 +156,7 @@ abcryxxl
 accszExk
 acctuvwj
 abdefghi",
-            31,
+            29,
         )];
         for (input, expected) in tests {
             assert_eq!(solve(input), expected);
