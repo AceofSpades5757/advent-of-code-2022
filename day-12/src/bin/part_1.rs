@@ -1,5 +1,5 @@
-use petgraph::prelude::DiGraphMap;
 use petgraph::algo::dijkstra;
+use petgraph::prelude::DiGraphMap;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
 pub struct Pos(usize, usize);
@@ -88,28 +88,40 @@ fn solve(input: &str) -> i32 {
             if y > 0 {
                 let up = board[y - 1][x];
                 if node.can_move_to(&up) {
-                    edges.push(((x as i32, y as i32, node.char()), (x as i32, y as i32 - 1, up.char())));
+                    edges.push((
+                        (x as i32, y as i32, node.char()),
+                        (x as i32, y as i32 - 1, up.char()),
+                    ));
                 }
             }
             // Down
             if y < board.len() - 1 {
                 let down = board[y + 1][x];
                 if node.can_move_to(&down) {
-                    edges.push(((x as i32, y as i32, node.char()), (x as i32, y as i32 + 1, down.char())));
+                    edges.push((
+                        (x as i32, y as i32, node.char()),
+                        (x as i32, y as i32 + 1, down.char()),
+                    ));
                 }
             }
             // Left
             if x > 0 {
                 let left = board[y][x - 1];
                 if node.can_move_to(&left) {
-                    edges.push(((x as i32, y as i32, node.char()), (x as i32 - 1, y as i32, left.char())));
+                    edges.push((
+                        (x as i32, y as i32, node.char()),
+                        (x as i32 - 1, y as i32, left.char()),
+                    ));
                 }
             }
             // Right
             if x < row.len() - 1 {
                 let right = board[y][x + 1];
                 if node.can_move_to(&right) {
-                    edges.push(((x as i32, y as i32, node.char()), (x as i32 + 1, y as i32, right.char())));
+                    edges.push((
+                        (x as i32, y as i32, node.char()),
+                        (x as i32 + 1, y as i32, right.char()),
+                    ));
                 }
             }
         }
